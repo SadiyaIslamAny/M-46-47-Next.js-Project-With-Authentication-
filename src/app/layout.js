@@ -1,5 +1,7 @@
 import { Montserrat, Poppins } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/shared/Header";
+import Navbar from "@/components/shared/Navbar";
 
 const poppins = Poppins({
     variable: "--font-poppins",
@@ -26,10 +28,7 @@ export default function RootLayout({ children }) {
       className={`h-full antialiased`}
     >
       <body className={`${poppins.className}min-h-full flex flex-col`}>
-      
-        <main>
          {children}
-        </main>
         </body>
     </html>
   );
