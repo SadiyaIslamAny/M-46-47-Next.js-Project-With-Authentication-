@@ -1,19 +1,38 @@
 "use client"
+import { authClient } from '@/lib/auth-client';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 const RegisterPage = () => {
-     const { register,handleSubmit, formState:{ errors }} = useForm();
-         const handleRegisterFunc = (data) =>{
-            console.log(data)
-         }
-    
-        //  console.log(errors)
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const handleRegisterFunc = async (data) => {
+        console.log(data)
+        const {email, name, photo, password} = data;
+        // console.log(email, name, photo, password)
+
+        const { data: res, error } = await authClient.signUp.email({
+            name,
+            email,
+            photo,
+            password, 
+            callbackURL: "/",
+        });
+        console.log({res, error})
+        if(error){
+            alert(error.message)
+        }
+        if(res){
+            alert("SignUp Successful")
+        }
+    }
+
+
+    //  console.log(errors)
     return (
         <div className='container mx-auto min-h-[80vh] flex justify-center items-center bg-slate-100 '>
             <div className='p-4 bg-white rounded-xl'>
                 <h2 className='font-bold text-3xl text-center mb-6'>Register your account</h2>
                 <form className='space-y-4' onSubmit={handleSubmit(handleRegisterFunc)}>
-                        {/* user name */}
+                    {/* user name */}
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend">Name</legend>
                         <input
@@ -35,7 +54,7 @@ const RegisterPage = () => {
                         />
                         {errors.photo && <p className='text-red-500'>{errors.photo.message}</p>}
                     </fieldset>
-                        {/* user email */}
+                    {/* user email */}
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend">Email address</legend>
                         <input
@@ -46,7 +65,7 @@ const RegisterPage = () => {
                         />
                         {errors.email && <p className='text-red-500'>{errors.email.message}</p>}
                     </fieldset>
-                        {/* user password */}
+                    {/* user password */}
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend">Password</legend>
                         <input
@@ -61,7 +80,7 @@ const RegisterPage = () => {
                     <button className="btn w-full bg-slate-800 text-white">Register</button>
 
                 </form>
-                
+
             </div>
         </div>
     );

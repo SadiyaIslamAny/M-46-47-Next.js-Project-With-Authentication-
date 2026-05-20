@@ -1,15 +1,26 @@
 "use client"
+import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 const LoginPage = () => {
-  const { register,handleSubmit, formState:{ errors }} = useForm();
-     const handleLoginFunc = (data) =>{
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const handleLoginFunc = async (data) => {
         console.log(data)
-     }
+        const { email,password } = data;
+        // console.log(email, name, photo, password)
 
-     console.log(errors)
+        const { data: res, error } = await authClient.signIn.email({
+            email,
+            password,
+            rememberMe: true,
+            callbackURL: "/",
+        });
+        console.log(res, error)
+    }
+
+    console.log(errors)
 
     return (
         <div className='container mx-auto min-h-[80vh] flex justify-center items-center bg-slate-100 '>
@@ -18,23 +29,23 @@ const LoginPage = () => {
                 <form className='space-y-4' onSubmit={handleSubmit(handleLoginFunc)}>
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend">Email address</legend>
-                        <input 
-                        type="email" 
-                        className="input" 
-                        placeholder="Type here email" 
-                         {...register("email" , { required: "email field is required" })}
+                        <input
+                            type="email"
+                            className="input"
+                            placeholder="Type here email"
+                            {...register("email", { required: "email field is required" })}
                         />
-                         {errors.email && <p className='text-red-500'>{errors.email.message}</p>}
+                        {errors.email && <p className='text-red-500'>{errors.email.message}</p>}
                     </fieldset>
-                     <fieldset className="fieldset">
+                    <fieldset className="fieldset">
                         <legend className="fieldset-legend">Password</legend>
                         <input
-                         type="password" 
-                         className="input" 
-                         placeholder="Type here password" 
-                          {...register("password", { required: "password field is required" })}
-                         />
-                         {errors.password && <p className='text-red-500'>{errors.password.message}</p>}
+                            type="password"
+                            className="input"
+                            placeholder="Type here password"
+                            {...register("password", { required: "password field is required" })}
+                        />
+                        {errors.password && <p className='text-red-500'>{errors.password.message}</p>}
                     </fieldset>
 
                     <button className="btn w-full bg-slate-800 text-white">Login</button>
