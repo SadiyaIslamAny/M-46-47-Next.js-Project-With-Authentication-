@@ -1,8 +1,9 @@
 "use client"
 import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const LoginPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -17,10 +18,11 @@ const LoginPage = () => {
             rememberMe: true,
             callbackURL: "/",
         });
-        console.log(res, error)
+        // console.log(res, error)
     }
 
-    console.log(errors)
+    const [isShowPassword, setIsShowPassword] = useState(false)
+    // console.log(errors)
 
     return (
         <div className='container mx-auto min-h-[80vh] flex justify-center items-center bg-slate-100 '>
@@ -37,14 +39,18 @@ const LoginPage = () => {
                         />
                         {errors.email && <p className='text-red-500'>{errors.email.message}</p>}
                     </fieldset>
-                    <fieldset className="fieldset">
+                    <fieldset className="fieldset relative">
                         <legend className="fieldset-legend">Password</legend>
                         <input
-                            type="password"
+                            type={isShowPassword ? "text" : "password"}
                             className="input"
                             placeholder="Type here password"
                             {...register("password", { required: "password field is required" })}
                         />
+                        <span className='absolute right-2 top-4 cursor-pointer' onClick={() =>setIsShowPassword(!isShowPassword)}>
+                            {isShowPassword? <FaEye/> : <FaEyeSlash/>}
+                        </span>
+                        
                         {errors.password && <p className='text-red-500'>{errors.password.message}</p>}
                     </fieldset>
 
